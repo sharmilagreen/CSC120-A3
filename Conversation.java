@@ -23,7 +23,7 @@ class Conversation implements Chatbot {
     Scanner scanner = new Scanner(System.in);
     System.out.println("How many rounds would you like?");
     int rounds = scanner.nextInt();
-    System.out.print("Hello! What's going on?");
+    System.out.println("Hello! What's going on?");
     String input = scanner.nextLine();
     for(int i = 0; i < rounds; i++){
       System.out.println(respond(input));
@@ -49,35 +49,55 @@ class Conversation implements Chatbot {
    */
   public String respond(String inputString) {
     String returnString = ""; 
-    for(int i = 0; i<inputString.length()-3; i++){
-      if(inputString.substring(i, i+2) == "I"){
-        System.out.print("here");
-        returnString += "you ";
-        i++;
-      }
-      else if(inputString.substring(i, i+2) == "me "){
-        returnString += "you";
-        i+=2;
-      }
-      else if(inputString.substring(i, i+2) == "am "){
-        returnString += "are";
-        i+=2;
-      }
-      else if(inputString.substring(i, i+3) == "you"){
-        returnString += "I";
-        i+=3;
-      }
-      else if(inputString.substring(i, i+1) == "my"){
-        returnString += "your";
-        i+=2;
-      }
-      else if(inputString.substring(i, i+3) == "your"){
-        returnString += "my";
-        i+=4;
-      }
-      else{
+    boolean containsMirror = false;
+    for(int i = 0; i<inputString.length(); i++){
+      if(i < inputString.length()-2){
+        if(i < inputString.length()-3){
+          if(i < inputString.length()-4){
+            if(inputString.substring(i, i+4).equals("your")){
+              containsMirror = true;
+              returnString += "my";
+              i+=3;
+              System.out.println(returnString);
+            }
+          }
+          if(inputString.substring(i, i+3).equals("you")){
+            containsMirror = true;
+            returnString += "I";
+            i+= 2;
+          }
+          if(inputString.substring(i, i+3).equals("are")){
+            containsMirror = true;
+            returnString += "am";
+            i+= 2;
+          }
+        }
+        if(inputString.substring(i, i+3).equals("me ") || inputString.substring(i, i+2).equals("I ")){
+          containsMirror = true;
+          returnString += "you";
+          i+=2;
+        }
+        if(inputString.substring(i,i+3).equals("am ")){
+          containsMirror = true;
+          returnString += "are";
+          i+=2;
+        }
+        if(inputString.substring(i, i+3).equals("my ")){
+          containsMirror = true;
+          returnString += "your";
+          i+=2;
+        }
         returnString += inputString.substring(i, i+1);
       }
+      else if(inputString.substring(i).equals("I")){
+        containsMirror = true;
+        returnString += "you";
+        i+=1;
+        returnString += inputString.substring(i);
+      }
+    }
+    if(containsMirror == false){
+      returnString = convoOptions[1];
     }
     return returnString; 
   }
